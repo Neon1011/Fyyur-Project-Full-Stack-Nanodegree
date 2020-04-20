@@ -1,5 +1,5 @@
-from flask import Flask , render_template, request , redirect, jsonify 
-from flask_sqlalchemy import SQLAlchemy, Model
+from flask import Flask , render_template, request , redirect, jsonify  , flash
+from flask_sqlalchemy import SQLAlchemy, Model 
 from sqlalchemy import Column , ForeignKey, Integer, String, Boolean , orm 
 import sys
 app = Flask(__name__, template_folder='templates', static_folder='static')

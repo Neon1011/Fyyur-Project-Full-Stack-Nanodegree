@@ -43,11 +43,9 @@ db.session.commit()
 print(".............")
 s = Student.query.filter(Student.id == 3).first()
 s.name = 'editedName'
-db.session.commit()
 
 
-
-
-db.create_all()
+# db.session.commit()
+# db.create_all()
 if __name__ == "__main__":
     app.run()
