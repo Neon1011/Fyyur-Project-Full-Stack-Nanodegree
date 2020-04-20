@@ -196,7 +196,7 @@ def venues():
   return render_template('pages/venues.html', areas=data)
 
 @app.route('/venues/search', methods=['POST'])
-def search_venues():
+def search_venues(): 
   # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for Hop should return "The Musical Hop".
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
@@ -210,7 +210,7 @@ def search_venues():
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
 @app.route('/venues/<int:venue_id>')
-def show_venue(venue_id):
+def show_venue(venue_id ):
   # shows the venue page with the given venue_id
   # TODO: replace with real venue data from the venues table, using venue_id
   data1={
