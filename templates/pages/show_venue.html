@@ -74,6 +74,17 @@
 		{% endfor %}
 	</div>
 </section>
-
+<div class="row" >
+	<button id="delete-btn" class="btn btn-lg btn-primary" href= "/venues/{{venue.id}}" >Delete</button>
+</div>
+<script>
+	delete_button = document.getElementById("delete-btn");
+	delete_button.onclick = function () {
+		fetch("/venues/{{venue.id}}",{
+				method: 'DELETE',
+			})
+		window.location.replace("/");
+		}			
+</script>
 {% endblock %}
 

@@ -61,10 +61,6 @@ class Venue(db.Model):
       db.session.add(self)
       db.session.commit()
 
-    def delete(self):
-      db.session.delete(self)
-      db.session.commit()
-
     def getVenue(self):
       upcoming_shows = Show.query.filter(Show.venue_id == self.id and Show.start_time > datetime.now()).all()
       data = {
@@ -151,44 +147,6 @@ class Show(db.Model):
       }
 
 db.create_all()
-
-vs = Show.query.all()
-for v in vs :
-  # v.genres.append('rrr')
-  # v.add() 
-  print(v.start_time.strftime("%m/%d/%Y, %H:%M:%S"))
-  print(v)
-# data=  [
-#     {
-#     "city": "San Francisco",
-#     "state": "CA",
-#     "id": 6,
-#     "name": "The Musical Hop",
-#     "num_upcoming_shows": 0
-#     },
-#     {
-#       "city": "San Francisco",
-#       "state": "CA",
-#       "id": 5,
-#       "name": "Park Square Live Music & Coffee",
-#       "num_upcoming_shows": 1
-#     },
-#     {
-#       "city": "New York",
-#       "state": "NY",
-#       "id": 4,
-#       "name": "The Dueling Pianos Bar",
-#       "num_upcoming_shows": 0
-#     }
-# ]
-
-# for d in data :
-#   x = Venue(city = d["city"], state = d["state"],
-#   id = d["id"],name= d["name"])
-
-#   x.add()
-
-# print( Venue.query.distinct(Venue.city,Venue.state).all())
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -280,11 +238,26 @@ def create_venue_form():
 def create_venue_submission():
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
-
-  # on successful db insert, flash success
-  flash('Venue ' + request.form['name'] + ' was successfully listed!')
-  # TODO: on unsuccessful db insert, flash an error instead.
-  # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
+  venue_form = VenueForm(request.form)
+  try :
+    v_new = Venue(
+      name = venue_form.name.data,
+      city = venue_form.city.data,
+      state = venue_form.state.data,
+      address = venue_form.address.data,
+      phone = venue_form.phone.data,
+      image_link = venue_form.image_link.data,
+      facebook_link = venue_form.facebook_link.data
+    )
+    v_new.add()
+    # on successful db insert, flash success
+    flash('Venue ' + str(request.form['name']) + ' was successfully listed!')
+    print("sucess adding : ",v_new)
+  except :
+      print("faild to add venue")
+      db.session.rollback()
+      flash('An error occurred. Venue ' + venue_form.name.data + ' could not be listed.')
+  # xxTODO: on unsuccessful db insert, flash an error instead.
   # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
   return render_template('pages/home.html')
 
@@ -292,9 +265,19 @@ def create_venue_submission():
 def delete_venue(venue_id):
   # TODO: Complete this endpoint for taking a venue_id, and using
   # SQLAlchemy ORM to delete a record. Handle cases where the session commit could fail.
-
+  deleted_venue = Venue.query.get(venue_id)
+  try:
+    db.session.delete(deleted_venue)
+    db.session.commit()
+    print("deleted !")
+  except:
+    print("failed delete")
+    db.session.rollback()
+    return None
+  print("deleted :" , venue_id)
   # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
   # clicking that button delete it from the db then redirect the user to the homepage
+  flash('Deleted successfully')
   return None
 
 #  Artists
